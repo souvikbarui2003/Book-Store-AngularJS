@@ -2,7 +2,7 @@
 ### Description
 
 Book Store is a simple single page application (SPA) that lets you buy, rate and leave your comment for all the books that are available in the store. You can also see all of your purchased books history or create your own favorite books list.
-Developed a Java-based Book Store application that efficiently manages book inventories and customer orders. Utilized Java Swing to create an intuitive and interactive GUI, integrating robust database management for reliable data storage and retrieval. The application features comprehensive functionalities including book management, order processing, and user profile handling, with a strong emphasis on usability and performance.
+
 
 ### Tech
 
