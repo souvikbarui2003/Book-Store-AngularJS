@@ -3,7 +3,9 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
 export const listByBook = query({
-  args: { bookId: v.id("books") },
+  args: {
+    bookId: v.id("books"),
+  },
   handler: async (ctx, args) => {
     return await ctx.db
       .query("comments")
@@ -25,14 +27,20 @@ export const add = mutation({
     const user = await ctx.db.get(userId);
     if (!user) throw new Error("User not found");
 
-    return await ctx.db.insert("comments", {
+    if (!args.text.trim()) {
+      throw new Error("Comment text cannot be empty");
+    }
+
+    await ctx.db.insert("comments", {
       userId,
       bookId: args.bookId,
-      userName: user.name ?? "Anonymous",
-      text: args.text,
+      userName: user.name || "Anonymous",
+      text: args.text.trim(),
       edited: false,
       createdAt: Date.now(),
     });
+
+    return { success: true };
   },
 });
 
@@ -49,16 +57,19 @@ export const edit = mutation({
     if (!comment) throw new Error("Comment not found");
 
     if (comment.userId !== userId) {
-      const user = await ctx.db.get(userId);
-      if (user?.role !== "admin") {
-        throw new Error("Not authorized to edit this comment");
-      }
+      throw new Error("You can only edit your own comments");
+    }
+
+    if (!args.text.trim()) {
+      throw new Error("Comment text cannot be empty");
     }
 
     await ctx.db.patch(args.commentId, {
-      text: args.text,
+      text: args.text.trim(),
       edited: true,
     });
+
+    return { success: true };
   },
 });
 
@@ -73,13 +84,16 @@ export const remove = mutation({
     const comment = await ctx.db.get(args.commentId);
     if (!comment) throw new Error("Comment not found");
 
-    if (comment.userId !== userId) {
-      const user = await ctx.db.get(userId);
-      if (user?.role !== "admin") {
-        throw new Error("Not authorized to delete this comment");
-      }
+    const user = await ctx.db.get(userId);
+    if (!user) throw new Error("User not found");
+
+    // Allow deletion if owner or admin
+    if (comment.userId !== userId && user.role !== "admin") {
+      throw new Error("Not authorized to delete this comment");
     }
 
     await ctx.db.delete(args.commentId);
+
+    return { success: true };
   },
 });

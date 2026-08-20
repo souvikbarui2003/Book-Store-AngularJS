@@ -34,7 +34,7 @@ export const purchase = mutation({
     // Create notification
     await ctx.db.insert("notifications", {
       userId,
-      message: `You purchased "${book.title}" for $${book.price.toFixed(2)}!`,
+      message: `You purchased "${book.title}" for $${book.price.toFixed(2)}`,
       read: false,
       createdAt: Date.now(),
     });
@@ -44,8 +44,13 @@ export const purchase = mutation({
 });
 
 export const listByUser = query({
-  args: { userId: v.id("users") },
+  args: {
+    userId: v.id("users"),
+  },
   handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return [];
+
     return await ctx.db
       .query("purchases")
       .withIndex("by_userId", (q) => q.eq("userId", args.userId))
@@ -60,11 +65,15 @@ export const hasPurchased = query({
     bookId: v.id("books"),
   },
   handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return false;
+
     const purchase = await ctx.db
       .query("purchases")
       .withIndex("by_userId", (q) => q.eq("userId", args.userId))
       .filter((q) => q.eq(q.field("bookId"), args.bookId))
       .first();
-    return !!purchase;
+
+    return purchase !== null;
   },
 });

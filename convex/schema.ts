@@ -6,6 +6,7 @@ const { users: authUsers, ...restAuthTables } = authTables;
 
 export default defineSchema({
   ...restAuthTables,
+
   users: defineTable({
     name: v.optional(v.string()),
     email: v.optional(v.string()),

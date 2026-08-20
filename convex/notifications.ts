@@ -6,6 +6,7 @@ export const listByUser = query({
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) return [];
+
     return await ctx.db
       .query("notifications")
       .withIndex("by_userId", (q) => q.eq("userId", userId))
@@ -23,11 +24,14 @@ export const markAllRead = mutation({
     const notifications = await ctx.db
       .query("notifications")
       .withIndex("by_userId", (q) => q.eq("userId", userId))
-      .filter((q) => q.eq(q.field("read"), false))
       .collect();
 
     for (const notif of notifications) {
-      await ctx.db.patch(notif._id, { read: true });
+      if (!notif.read) {
+        await ctx.db.patch(notif._id, { read: true });
+      }
     }
+
+    return { success: true };
   },
 });
