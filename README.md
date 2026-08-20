@@ -1,96 +1,108 @@
+# BookNook — Your Digital Bookstore
 
-### Description
+A full-featured digital bookstore built with React, Convex, and Tailwind CSS. Browse, buy, rate, and review books in a beautiful, modern interface.
 
-Book Store is a simple single page application (SPA) that lets you buy, rate and leave your comment for all the books that are available in the store. You can also see all of your purchased books history or create your own favorite books list.
+## Features
 
+- **Browse & Search** — Search books by title, author, or genre with full-text search
+- **Rate & Review** — Rate books (1-5 stars) and leave comments
+- **Purchase Books** — Buy books with a simulated checkout system
+- **Favorites** — Build your personal favorites list
+- **Purchase History** — View all your past purchases
+- **Notifications** — Get notified when you make a purchase
+- **Admin Dashboard** — Manage books (add, edit, delete) with an admin panel
+- **Authentication** — Email/password sign up and sign in
 
-### Tech
+## Tech Stack
 
-Book Store uses a number of open source projects to work:
-* [MongoDB](https://www.mongodb.com) - Free and open-source cross-platform document-oriented database
-* [Mongoose](http://mongoosejs.com/index.html) - Elegant MongoDB object modeling for NodeJS
-* [NodeJS](https://nodejs.org/en/) - Evented I/O for the backend
-* [ExpressJS](https://expressjs.com) - Fast, unopinionated, minimalist web framework for NodeJS
-* [JSONWebToken](https://jwt.io) - Used for authorization
-* [Angular](https://angular.io) - Platform that makes it easy to build applications with the web
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui, Framer Motion
+- **Backend:** Convex (serverless database + functions)
+- **Auth:** @convex-dev/auth with password provider
+- **Routing:** React Router v7
+- **Icons:** Lucide React
 
-The goal of this project is to show the core concepts of building SPA with ExpressJS and Angular. In this project I've used:
+## Getting Started
 
-* Wrapped each major feature into a module
-* Lazy-loading for most of the modules so the app can start faster
-* Preload lazy-loaded modules after the app starts so they can be ready for use as soon as possible
-* Shared module for compoennts, directives and pipes that can be imported into any feature module
-* Services for each major feature
-* Guards to prevent unauthorized users to view routes that require authentication or admin rights
-* Interceptors for attaching JWT token to the request headers, showing notifications from the server response and error handling
-* Custom directives
-* Custom pipes
-* TypeScript models
-* Reactive forms for handling user input
+### Prerequisites
 
-### Installation
+- [Bun](https://bun.sh) (or Node.js 18+)
+- A [Convex](https://convex.dev) account
 
-Book Store requires 
-* [MongoDB](https://www.mongodb.com/download-center#community) v3.6+
-* [NodeJS](https://nodejs.org/en/) v8+
+### Setup
 
-To start the database (port: 27017): Install MongoDB, open new cmd window (in project root) and run
+1. Clone the repository:
+   ```sh
+   git clone <repo-url>
+   cd book-store
+   ```
 
-```sh
-$ cd server
-$ start-mongodb
+2. Install dependencies:
+   ```sh
+   bun install
+   ```
+
+3. Initialize Convex (first time only):
+   ```sh
+   bun convex dev
+   ```
+
+4. Seed sample books (first time only):
+   ```sh
+   bun convex run seed:seed
+   ```
+
+5. Start the development server:
+   ```sh
+   bun run dev
+   ```
+
+6. Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `bun run dev` | Start the Vite dev server |
+| `bun run build` | Build for production |
+| `bun run check` | Run TypeScript type checking |
+| `bun convex dev` | Start Convex dev process |
+| `bun convex run seed:seed` | Seed sample book data |
+
+## Project Structure
+
+```
+├── convex/                 # Convex backend functions
+│   ├── _generated/         # Auto-generated types & API
+│   ├── auth.ts             # Auth configuration
+│   ├── http.ts             # HTTP router
+│   ├── schema.ts           # Database schema
+│   ├── users.ts            # User queries/mutations
+│   ├── books.ts            # Book queries/mutations
+│   ├── ratings.ts          # Rating queries/mutations
+│   ├── comments.ts         # Comment queries/mutations
+│   ├── purchases.ts        # Purchase queries/mutations
+│   ├── notifications.ts    # Notification queries/mutations
+│   └── seed.ts             # Sample data seeder
+├── src/
+│   ├── components/         # Reusable UI components
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   │   └── ui/             # shadcn/ui components
+│   ├── pages/              # Page components
+│   │   ├── Landing.tsx
+│   │   ├── Auth.tsx
+│   │   ├── Books.tsx
+│   │   ├── BookDetail.tsx
+│   │   ├── Profile.tsx
+│   │   ├── Favorites.tsx
+│   │   ├── Purchases.tsx
+│   │   ├── Admin.tsx
+│   │   └── Notifications.tsx
+│   ├── App.tsx             # Router setup
+│   └── main.tsx            # App entry point
+└── package.json
 ```
 
-To add initial seeding: (do this step once only the first time you start the app)
-After you start MondoDB open new cmd window (in project root) and run
-
-```sh
-$ cd server
-$ seedBooks
-```
-
-To start the server (port: 8000): open new cmd window (in project root) and run
-
-```sh
-$ cd server
-$ npm install (if you havent already installed the dependencies)
-$ npm start
-```
-
-To start the client (port: 4200): open new cmd window (in project root) and run
-
-```sh
-$ cd client
-$ npm install (if you havent already installed the dependencies)
-$ ng serve
-```
-
-### Features
-
-- Anonymous users
-    - Login/Register
-    - View all books
-    - View books details, rating and comments
-
-- Authenticated users
-    - Buy books
-    - Rate books
-    - Comment books
-    - View user profiles
-    - View his own purchases history
-    - Create favorite books list
-    - Can change his own avatar
-
-- Admin users
-    - Add books to the store
-    - Edit books
-    - Delete books
-    - Edit/Delete offensive user comments
-    - Block/Unblock user from commenting
-    - Change unappropriate user avatars
-
-
-### License
-----
+## License
 
 KNU
